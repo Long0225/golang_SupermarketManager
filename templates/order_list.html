@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+  <!-- 在所有的基础路径：src,href前端都加上 href属性值 /-->
+  <base href="/"/>
+
+  <meta charset="UTF-8">
+  <title>超市订单管理系统</title>
+  <link rel="stylesheet" href="css/public.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<!--头部-->
+<header class="publicHeader">
+  <h1>超市订单管理系统</h1>
+  <div class="publicHeaderR">
+    <p><span id="hours">下午好！</span><span style="color: #fff21b" th:text="${session.admin_in_session.nickname}"> Admin</span> , 欢迎你！</p>
+    <a href="/logout">退出</a>
+  </div>
+</header>
+
+<!--时间-->
+<section class="publicTime">
+  <span id="time">2025年1月1日 11:11  星期一</span>
+  <a href="#">温馨提示：为了能正常浏览，请使用高版本浏览器！（IE10+）</a>
+</section>
+<!--主体内容-->
+<section class="publicMian ">
+  <div class="left">
+    <h2 class="leftH2"><span class="span1"></span>功能列表 <span></span></h2>
+    <nav>
+      <ul class="list">
+        <li><a href="/log/list">日志管理</a></li>
+        <li><a href="/supplier/list">供应商管理</a></li>
+        <li><a href="/customer/list">顾客管理</a></li>
+        <li><a href="/changePassword">密码修改</a></li>
+        <li><a href="/logout">退出系统</a></li>
+        <li id="active"><a href="/order/list">订单管理</a></li>
+        <li ><a href="/category/list">商品分类管理</a></li>
+        <li><a href="/product/list">商品管理</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="right">
+    <div class="location">
+      <strong>你现在所在的位置是:</strong>
+      <span>订单管理页面</span>
+    </div>
+    <div class="search">
+      <form action="/order/query" method="post">
+        <span>订单编号：</span>
+        <input type="text" name="order_sn" placeholder="请输入商品订单号"/>
+
+        <span>所属顾客：</span>
+        <select name="customer_id" >
+          <option value="">--请选择--</option>
+          <option value="1">张三</option>
+          <option value="2">李四</option>
+        </select>
+
+        <span>订单状态：</span>
+        <select name="state">
+          <option value="">--请选择--</option>
+          <option value="1">已完成</option>
+          <option value="0">待支付</option>
+          <option value="-1">取消</option>
+        </select>
+        <input type="submit" value="查询"/>
+      </form>
+
+      <a href="/order/toAdd">添加订单</a>
+    </div>
+    <!--订单表格 样式和供应商公用-->
+    <table class="providerTable" cellpadding="0" cellspacing="0">
+      <tr class="firstTr">
+        <th width="20%">订单编号</th>
+        <th width="15%">创建时间</th>
+        <th width="15%">总金额</th>
+        <th width="15%">订单状态</th>
+        <th width="15%">所属顾客</th>
+        <th width="20%">操作</th>
+      </tr>
+      <tr th:each="o : ${orders}">
+        <td th:text="${o.order_sn}">张三</td>
+        <td th:text="${#dates.format(o.create_time, 'yyyy-MM-dd')}">2015-11-12</td>
+        <td th:text="${o.total_price}">110</td>
+        <td>
+          <span th:if="${o.state==1}" th:text="已完成" style="color:green;"></span>
+          <span th:if="${o.state==0}" th:text="待支付" style="color:sandybrown;"></span>
+          <span th:if="${o.state==-1}" th:text="取消" style="color:red;"></span>
+        </td>
+        <td>
+          <span th:if="${o.customer!=null}" th:text="${o.customer.name}"></span>
+          <span th:if="${o.customer==null}">没有顾客</span>
+        </td>
+        <td>
+          <a th:href="@{/order/view(id=${o.id})}"><img src="img/read.png" alt="查看" title="查看"/></a>
+          <a th:href="@{/order/toUpdate(id=${o.id})}"><img src="img/xiugai.png" alt="修改" title="修改"/></a>
+          <a href="javascript:;" class="del" th:data-id="${o.id}"><img src="img/schu.png" alt="删除" title="删除"/></a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</section>
+<!--点击删除按钮后弹出的页面-->
+<div class="zhezhao"></div>
+<div class="remove" id="removeBi">
+  <div class="removerChid">
+    <h2>提示</h2>
+    <div class="removeMain">
+      <p>你确定要删除该订单吗？</p>
+      <a href="#" id="yes">确定</a>
+      <a href="#" id="no">取消</a>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+</footer>
+<script src="js/jquery.js"></script>
+<script src="js/js.js"></script>
+<script src="js/time.js"></script>
+<script type="text/javascript">
+  $(function(){
+    $(".del").click(function(){
+      let boo = window.confirm("你确定要删除当前数据吗？");
+      if(boo){//点了确定
+        var id = $(this).data("id");
+        location.href = "/order/del?id="+id;
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

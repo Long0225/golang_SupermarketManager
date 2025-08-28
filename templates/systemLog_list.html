@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <base href="/"/>
+    <meta charset="UTF-8">
+    <title>超市顾客管理系统</title>
+    <link rel="stylesheet" href="css/public.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<!--头部-->
+<header class="publicHeader">
+    <h1>超市顾客管理系统</h1>
+    <div class="publicHeaderR">
+        <p><span id="hours">下午好！</span><span style="color: #fff21b" th:text="${session.admin_in_session.nickname}"> Admin</span> , 欢迎你！</p>
+        <a href="/logout">退出</a>
+    </div>
+</header>
+<!--时间-->
+<section class="publicTime">
+    <span id="time">2015年1月1日 11:11  星期一</span>
+    <a href="#">温馨提示：为了能正常浏览，请使用高版本浏览器！（IE10+）</a>
+</section>
+<!--主体内容-->
+<section class="publicMian ">
+    <div class="left">
+        <h2 class="leftH2"><span class="span1"></span>功能列表 <span></span></h2>
+        <nav>
+            <ul class="list">
+                <li id="active"><a href="/log/list">日志管理</a></li>
+                <li><a href="/supplier/list">供应商管理</a></li>
+                <li><a href="/customer/list">顾客管理</a></li>
+                <li><a href="/changePassword">密码修改</a></li>
+                <li><a href="/logout">退出系统</a></li>
+                <li><a href="/order/list">订单管理</a></li>
+                <li ><a href="/category/list">商品分类管理</a></li>
+                <li><a href="/product/list">商品管理</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="right">
+        <div class="location">
+            <strong>你现在所在的位置是:</strong>
+            <span>日志管理页面</span>
+        </div>
+        <!--顾客表格 样式和供应商公用-->
+        <table class="providerTable" cellpadding="0" cellspacing="0" border="1" style="color: #6969fb">
+            <tr class="firstTr">
+                <th width="10%">操作人ID</th>
+                <th width="10%">操作人</th>
+                <th width="50%">日志内容</th>
+                <th width="20%">创建时间</th>
+                <th width="10%">操作</th>
+            </tr>
+            <tr th:each="s:${systemLogs}">
+
+                <td th:text="${s.operation_id}"></td>
+                <td th:text="${s.admin.username}"></td>
+                <td th:text="${s.content}"></td>
+                <td th:text="${#dates.format(s.create_time, 'yyyy-MM-dd HH:mm')}"></td>
+                <td>
+                    <a th:href="@{/log/view(id=${s.id})}"><img src="img/read.png" alt="查看" title="查看"/></a>
+                    <a href="javascript:;" class="del" th:data-id="${s.id}"><img src="img/schu.png" alt="删除" title="删除"/></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</section>
+
+<!--点击删除按钮后弹出的页面-->
+<div class="zhezhao"></div>
+<div class="remove" id="removeBi">
+    <div class="removerChid">
+        <h2>提示</h2>
+        <div class="removeMain">
+            <p>你确定要删除该订单吗？</p>
+            <a href="#" id="yes">确定</a>
+            <a href="#" id="no">取消</a>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+</footer>
+
+<script src="js/jquery.js"></script>
+<script src="js/js.js"></script>
+<script src="js/time.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".del").click(function () {
+            let boo = window.confirm("你确定要删除当前数据吗？");
+            if (boo){
+                let id = $(this).data("id");
+                location.href="/log/del?id="+id;
+            }
+        });
+    });
+</script>
+</body>
+</html>

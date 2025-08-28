@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+  <base href="/"/>
+  <meta charset="UTF-8">
+  <title>超市管理系统</title>
+  <link rel="stylesheet" href="css/public.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<!--头部-->
+<header class="publicHeader">
+  <h1>超市订单管理系统</h1>
+  <div class="publicHeaderR">
+    <p><span id="hours">下午好！</span><span style="color: #fff21b" th:text="${session.admin_in_session.nickname}"> Admin</span> , 欢迎你！</p>
+    <a href="/logout">退出</a>
+  </div>
+</header>
+<!--时间-->
+<section class="publicTime">
+  <span id="time">2015年1月1日 11:11  星期一</span>
+  <a href="#">温馨提示：为了能正常浏览，请使用高版本浏览器！（IE10+）</a>
+</section>
+<!--主体内容-->
+<section class="publicMian ">
+  <div class="left">
+    <h2 class="leftH2"><span class="span1"></span>功能列表 <span></span></h2>
+    <nav>
+      <ul class="list">
+        <li><a href="/log/list">日志管理</a></li>
+        <li><a href="/supplier/list">供应商管理</a></li>
+        <li><a href="/customer/list">顾客管理</a></li>
+        <li><a href="/changePassword">密码修改</a></li>
+        <li><a href="/logout">退出系统</a></li>
+        <li id="active"><a href="/order/list">订单管理</a></li>
+        <li ><a href="/category/list">商品分类管理</a></li>
+        <li><a href="/product/list">商品管理</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="right">
+    <div class="location">
+      <strong>你现在所在的位置是:</strong>
+      <span>订单管理页面 >> 信息查看</span>
+    </div>
+    <div class="providerView">
+      <p><strong>订单编号：</strong><span th:text="${order.order_sn}"></span></p>
+      <p><strong>订单日期：</strong><span th:text="${#dates.format(order.create_time, 'yyyy-MM-dd ')}"></span></p>
+      <p><strong>订单总价：</strong><span th:text="${order.total_price}"></span></p>
+      <p><strong>订单状态：</strong><span th:if="${order.state==1}">已完成</span>
+                                  <span th:if="${order.state==0}">待支付</span>
+                                  <span th:if="${order.state==-1}">取消</span>
+      </p>
+      <p><strong>顾客名：</strong><span th:text="${order.customers.name}"></span></p>
+      <a href="/order/list">返回</a>
+    </div>
+  </div>
+</section>
+<footer class="footer">
+</footer>
+<script src="js/time.js"></script>
+
+</body>
+</html>

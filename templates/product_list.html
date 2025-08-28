@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <!-- 在所有的基础路径：src,href前端都加上 href属性值 /-->
+  <base href="/"/>
+
+  <meta charset="UTF-8">
+  <title>超市管理系统</title>
+  <link rel="stylesheet" href="static/css/public.css"/>
+  <link rel="stylesheet" href="static/css/style.css"/>
+</head>
+<body>
+<!--头部-->
+<header class="publicHeader">
+  <h1>超市管理系统</h1>
+  <div class="publicHeaderR">
+    <p><span id="hours">下午好！</span><span style="color: #fff21b">Admin</span> , 欢迎你！</p>
+    <a href="/logout">退出</a>
+  </div>
+</header>
+<!--时间-->
+<section class="publicTime">
+  <span id="time">2015年1月1日 11:11  星期一</span>
+  <a href="#">温馨提示：为了能正常浏览，请使用高版本浏览器！（IE10+）</a>
+</section>
+<!--主体内容-->
+<section class="publicMian ">
+  <div class="left">
+    <h2 class="leftH2"><span class="span1"></span>功能列表 <span></span></h2>
+    <nav>
+      <ul class="list">
+        <li><a href="/log/list">日志管理</a></li>
+        <li><a href="/supplier/list">供应商管理</a></li>
+        <li><a href="/customer/list">顾客管理</a></li>
+        <li ><a href="/changePassword">密码修改</a></li>
+        <li><a href="/logout">退出系统</a></li>
+        <li><a href="/order/list">订单管理</a></li>
+        <li><a href="/category/list">商品分类管理</a></li>
+        <li id="active"><a href="/product/list">商品管理</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="right">
+    <div class="location">
+      <strong>你现在所在的位置是:</strong>
+      <span>订单管理页面</span>
+    </div>
+    <div class="search">
+      <form action="/product/query" method="post">
+        <span>商品编码：</span>
+        <input type="text" name="code" placeholder="请输入商品编码"/>
+
+        <span>商品分类：</span>
+
+        <select name="category_id">
+          <option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+          <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+        </select>
+        <span>供应商：</span>
+        <select name="supplier_id">
+          <option value="">&#45;&#45;请选择&#45;&#45;</option>
+          <option th:each="s : ${suppliers}" th:value="${s.id}" th:text="${s.name}">
+          </option>
+        </select>
+        <input type="submit" value="查询"/>
+      </form>
+      <a href="/product/toAdd">添加订单</a>
+    </div>
+    <!--订单表格 样式和供应商公用-->
+    <table class="providerTable" cellpadding="0" cellspacing="0">
+      <tr class="firstTr">
+        <th width="20%">商品编码</th>
+        <th width="15%">商品名称</th>
+        <th width="15%">商品价格</th>
+        <th width="10%">商品库存</th>
+        <th width="10%">商品分类</th>
+        <th width="10%">供应商</th>
+        <th width="20%">操作</th>
+      </tr>
+      <tr th:each="p : ${products}">
+        <td th:text="${p.code}"></td>
+        <td th:text="${p.name}"></td>
+        <td th:text="${p.price}"></td>
+        <td th:text="${p.stock}"></td>
+        <td>
+          <span th:if="${p.category!=null}" th:text="${p.category.name}"></span>
+          <span th:if="${p.category==null}">没有分类</span>
+        </td>
+        <td>
+          <span th:if="${p.supplier!=null}" th:text="${p.supplier.name}"></span>
+          <span th:if="${p.supplier==null}">没有供应商</span>
+        </td>
+        <td>
+          <a th:href="@{/product/view(id=${p.id})}"><img src="img/read.png" alt="查看" title="查看"/></a>
+          <a th:href="@{/product/toUpdate(id=${p.id})}"><img src="img/xiugai.png" alt="修改" title="修改"/></a>
+          <a href="javascript:;" class="del" th:data-id="${p.id}"><img src="img/schu.png" alt="删除" title="删除"/></a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</section>
+<!--点击删除按钮后弹出的页面-->
+<div class="zhezhao"></div>
+<div class="remove" id="removeBi">
+  <div class="removerChid">
+    <h2>提示</h2>
+    <div class="removeMain">
+      <p>你确定要删除该订单吗？</p>
+      <a href="#" id="yes">确定</a>
+      <a href="#" id="no">取消</a>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+</footer>
+<script src="js/jquery.js"></script>
+<script src="js/js.js"></script>
+<script src="js/time.js"></script>
+<script type="text/javascript">
+  $(function(){
+    $(".del").click(function(){
+      let boo = window.confirm("你确定要删除当前数据吗？");
+      if(boo){//点了确定
+        var id = $(this).data("id");
+        location.href = "/product/del?id="+id;
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

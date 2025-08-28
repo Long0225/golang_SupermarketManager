@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>错误提示 - 超市管理系统</title>
+    <link rel="stylesheet" href="static/css/style.css"/>
+</head>
+<body>
+<section class="error-container">
+    <div class="error-message">
+        <h2>操作失败</h2>
+        <p>{{.error}}</p>
+        <div class="back-button">
+            <a href="javascript:history.back(-1)">返回上一页</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>
